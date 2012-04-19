@@ -20,7 +20,7 @@ class UserLookupTests extends FunSuite with ShouldMatchers{
   val dataSource = new DataSource(newArrayList(tom, helen, paul, john, louise, maggie))
   
   test("should return a predicate that wraps the function"){
-    val hasId2:Predicate[User] = ImplicitJava funcToPred  ((u:User) => u.getId == 2)
+    val hasId2:Predicate[User] = ImplicitJava.funcToPred  ((u:User) => u.getId == 2)
 
     hasId2 apply helen should equal (true)
     hasId2 apply paul should equal (false)
@@ -30,7 +30,8 @@ class UserLookupTests extends FunSuite with ShouldMatchers{
     val expectedUsers = newArrayList(john, louise)
     val userLookup = new UserLookup(dataSource)
     
-    userLookup olderThan 34 should equal (expectedUsers)
+    val res = userLookup.olderThan(34) 
+    res should equal (expectedUsers)
   }
 
   test("should return names of users under 26"){
