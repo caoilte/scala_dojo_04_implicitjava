@@ -18,21 +18,31 @@ class UserLookup(dataSource :DataSource) extends JUserLookup {
     dataSource.findUsers(
       (user: User) => user.getAge() > age)
   }
-
-  /*
-      Are there standard JavaConversions to make it easier to work with Java collections?
-   */
-  def namesYoungerThan(age: Int):List[String] = {
-    val userList = dataSource.findUsers(
-        (user: User) => user.getAge() < age)
+  
+  private def userNameLookup(function: (User) => Boolean) = {
+    val userList = dataSource.findUsers(function)
     val scalaUserBuffer = userList.asScala
     val scalaNameBuffer = scalaUserBuffer.map(_.getName())
     scalaNameBuffer.asJava
   }
 
-  
-  def allFemale(): List[String] = new ArrayList[String]()
+  /*
+      Are there standard JavaConversions to make it easier to work with Java collections?
+   */
+  def namesYoungerThan(age: Int):List[String] = {
+    userNameLookup(_.getAge() < age)
+  }
 
-  def allEligible() = new ArrayList[User]()
+  
+  def allFemale(): List[String] = {
+    userNameLookup(!_.isMale)
+  }
+
+  def allEligible() = {
+    dataSource.findUsers(
+        (user: User) => {
+          user.isMale() && user.getAge() > 34
+        })
+  }
 
 }
