@@ -6,6 +6,7 @@ import com.google.common.base.Predicate
 class UserLookup(dataSource :DataSource) extends JUserLookup {
 
   import ImplicitJava.funcToPred
+  import scala.collection.JavaConverters._
 
   
   /*
@@ -21,7 +22,13 @@ class UserLookup(dataSource :DataSource) extends JUserLookup {
   /*
       Are there standard JavaConversions to make it easier to work with Java collections?
    */
-  def namesYoungerThan(age: Int):List[String] = new ArrayList[String]()
+  def namesYoungerThan(age: Int):List[String] = {
+    val userList = dataSource.findUsers(
+        (user: User) => user.getAge() < age)
+    val scalaUserBuffer = userList.asScala
+    val scalaNameBuffer = scalaUserBuffer.map(_.getName())
+    scalaNameBuffer.asJava
+  }
 
   
   def allFemale(): List[String] = new ArrayList[String]()
