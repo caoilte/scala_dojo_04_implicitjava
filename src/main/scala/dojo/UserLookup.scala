@@ -5,11 +5,7 @@ import com.google.common.base.Predicate
 
 class UserLookup(dataSource :DataSource) extends JUserLookup {
 
-  implicit def createPredicate(func: User => Boolean) = new Predicate[User] {
-    def apply(user: User) = {
-      func(user)
-    }
-  }
+  import ImplicitJava.funcToPred
 
   
   /*
